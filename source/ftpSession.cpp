@@ -1997,7 +1997,7 @@ void FtpSession::DELE (char const *args_)
 	}
 
 	// unlink the path
-	if (::unlink (path.c_str ()) != 0)
+	if (IOAbstraction::unlink (path.c_str ()) != 0)
 	{
 		sendResponse ("550 %s\r\n", std::strerror (errno));
 		return;
@@ -2081,7 +2081,7 @@ void FtpSession::MKD (char const *args_)
 	}
 
 	// create the directory
-	if (::mkdir (path.c_str (), 0755) != 0)
+	if (IOAbstraction::mkdir (path.c_str (), 0755) != 0)
 	{
 		sendResponse ("550 %s\r\n", std::strerror (errno));
 		return;
@@ -2498,7 +2498,7 @@ void FtpSession::RMD (char const *args_)
 	}
 
 	// remove the directory
-	if (::rmdir (path.c_str ()) != 0)
+	if (IOAbstraction::rmdir (path.c_str ()) != 0)
 	{
 		sendResponse ("550 %d %s\r\n", __LINE__, std::strerror (errno));
 		return;
@@ -2566,7 +2566,7 @@ void FtpSession::RNTO (char const *args_)
 	}
 
 	// rename the file
-	if (::rename (m_rename.c_str (), path.c_str ()) != 0)
+	if (IOAbstraction::rename (m_rename.c_str (), path.c_str ()) != 0)
 	{
 		m_rename.clear ();
 		sendResponse ("550 %s\r\n", std::strerror (errno));

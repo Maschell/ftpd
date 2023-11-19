@@ -3,6 +3,7 @@
 #include <map>
 #include <memory>
 #include <sys/dirent.h>
+#include <sys/unistd.h>
 #include <vector>
 
 class VirtualDirectory
@@ -194,4 +195,31 @@ void IOAbstraction::addVirtualPath (const std::string &virtualPath,
     const std::vector<std::string> &subDirectories)
 {
 	sVirtualDirs.insert (std::make_pair (virtualPath, subDirectories));
+}
+
+void IOAbstraction::clear ()
+{
+	std::lock_guard lock (sOpenVirtualDirectoriesMutex);
+	sOpenVirtualDirectories.clear ();
+	sVirtualDirs.clear ();
+}
+
+int IOAbstraction::mkdir (const char *path, mode_t mode)
+{
+	return ::mkdir (convertPath (path).c_str (), mode);
+}
+
+int IOAbstraction::rmdir (const char *path)
+{
+	return ::rmdir (convertPath (path).c_str ());
+}
+
+int IOAbstraction::unlink (const char *path)
+{
+	return ::unlink (convertPath (path).c_str ());
+}
+
+int IOAbstraction::rename (const char *path, const char *path2)
+{
+	return ::rename (convertPath (path).c_str (), convertPath (path2).c_str ());
 }
